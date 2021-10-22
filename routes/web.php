@@ -24,6 +24,7 @@ Route::group(['middleware'=>['verify.shopify']], function () {
     Route::get('/', [\App\Http\Controllers\AdminController::class, 'orders'])->name('home');
     Route::get('sync-orders', [\App\Http\Controllers\AdminController::class, 'ShopifyOrders'])->name('sync.orders');
     Route::get('order-view/{id}', [\App\Http\Controllers\AdminController::class, 'order_view'])->name('order.view');
+    Route::get('filter-orders', [\App\Http\Controllers\AdminController::class, 'filter_orders'])->name('filter.orders');
 
     // products
     Route::get('sync-products', [\App\Http\Controllers\AdminController::class, 'ShopifyProducts'])->name('sync.products');

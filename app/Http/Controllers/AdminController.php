@@ -117,6 +117,15 @@ class AdminController extends Controller
             'notification'=>$notification,
         ]);
     }
+    public function filter_orders(Request $request){
+//        dd($request->all());
+        $filtered_orders = Order::where('financial_status','like', '%' . $request->filter . '%')->paginate(20);
+        $notification = CheckoutOrder::where('status',0)->count();
+        return view('pages.orders')->with([
+            'orders'=>$filtered_orders,
+            'notification'=>$notification,
+        ]);
+    }
 
     public function ShopifyProducts($next = null)
     {

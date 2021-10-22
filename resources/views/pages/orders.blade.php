@@ -23,9 +23,30 @@
             <a href="{{route('sync.products')}}" type="button" class="btn btn-primary">Sync Products</a>
             <a href="{{route('sync.orders')}}" type="button" class="btn btn-primary">Sync Orders</a>
         </div>
+
+        <div class="col-md-12 mt-2">
+            <div class="form-group">
+                <form action="{{route('filter.orders')}}" method="GET">
+                    @sessionToken
+                <div class="input-group">
+                    <select class="form-control bg-white" name="filter" id="country">
+                        <option selected disabled>Search by Finanacial Status</option>
+                        <option value="paid">Paid</option>
+                        <option value="partially paid">Partially paid</option>
+                        <option value="pending">Payment pending</option>
+                        <option value="refunded">Refunded</option>
+                        <option value="partially refunded">Partially refunded</option>
+                        <option value="unpaid">Unpaid</option>
+                    </select>
+                    <button  type="submit" class="btn btn-primary">Filter</button>
+                </div>
+                </form>
+            </div>
+        </div>
+
     </div>
 
-    <div class="row mt-2">
+    <div class="row">
         <div class="col-12">
                 <div class="card">
                     @if (count($orders) > 0)
@@ -106,8 +127,6 @@
                                 <td>
                                         <a href="{{route('order.view',($order->id))}}" class="btn btn-sm btn-primary" type="button"> view</a>
                                 </td>
-
-
 
                             </tr>
 
