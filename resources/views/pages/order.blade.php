@@ -57,7 +57,7 @@
                         <td class="product__image" style="width:20%; padding-top:2em;padding-bottom: 2em;padding-left: 5%;">
                             <div class="product-thumbnail" style="position:relative;">
                                 <div class="product-thumbnail__wrapper">
-                                    @if(isset($line_item->product_varient->image))
+                                    @if(isset($line_item->product_varient->image) && $line_item->product_varient->image != '')
                                     <img alt="image" width="70px" height="70px" src="{{$line_item->product_varient->image}}" class="product-thumbnail__image">
                                     @else
                                         <img src="https://hermes-fish-boutique.test/forblank/rsz_blankimage.jpg" width="70px" height="70px" class="product-thumbnail__image">
