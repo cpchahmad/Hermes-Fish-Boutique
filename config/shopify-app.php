@@ -323,7 +323,12 @@ return [
         [
             'topic' => 'ORDERS_CREATE',
             'address' => 'https://phpstack-176572-2227504.cloudwaysapps.com/webhook/orders-create'
+        ],
+        [
+            'topic' => 'PRODUCTS_CREATE',
+            'address' => 'https://phpstack-176572-2227504.cloudwaysapps.com/webhook/products-create'
         ]
+
 
     ],
 

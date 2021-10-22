@@ -21,9 +21,7 @@ use Symfony\Component\HttpKernel\Profiler\Profile;
 class AdminController extends Controller
 {
     public function orders(){
-        $shop = Auth::user();
-        $webhooks = $shop->api()->rest('GET', '/admin/webhooks.json');
-        dd($webhooks);
+
         $orders = Order::latest()->paginate(20);
         $notification = CheckoutOrder::where('status',0)->count();
         return view('pages.orders')->with([
