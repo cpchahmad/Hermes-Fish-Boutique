@@ -35,7 +35,7 @@
                         @foreach($orders as $index => $order)
                             <tr>
                                 <td style="display: flex;justify-content: space-between;">
-                                    <a href="{{route('check.order.view',($order->id))}}">{{ $order->id }}</a>
+                                    <a href="{{route('check.order.view',($order->id))}}">#{{ $order->id }}</a>
                                 </td>
                                 <td class="">{{\Illuminate\Support\Carbon::createFromTimeString($order->created_at)->format('d-m-Y')}}</td>
                                 <td class="">{{ $order->currency }} {{ number_format(($order->total_price)/100, 2) }}</td>
