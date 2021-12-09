@@ -279,8 +279,7 @@ class AdminController extends Controller
             $ol->image = $item->image;
             $ol->save();
         }
-        return redirect('https://order-trackify.myshopify.com/pages/thanks-for-order');
-
+        return redirect('https://hermes-fish-boutique.myshopify.com/pages/thanks-for-order');
     }
     public function create_order(Request $request){
 

@@ -127,7 +127,6 @@
                                 <td>
                                         <a href="{{route('order.view',($order->id))}}" class="btn btn-sm btn-primary" type="button"> view</a>
                                 </td>
-
                             </tr>
 
                         @endforeach
@@ -140,8 +139,6 @@
                         <div class="pagination">
                             {{ $orders->links("pagination::bootstrap-4") }}
                         </div>
-
-
                 </div>
 
         </div>
