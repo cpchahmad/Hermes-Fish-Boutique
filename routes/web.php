@@ -37,5 +37,4 @@ Route::group(['middleware'=>['verify.shopify']], function () {
     Route::post('create-order', [\App\Http\Controllers\AdminController::class, 'create_order'])->name('create.order');
 
 });
-
     Route::post('checkout-data', [\App\Http\Controllers\AdminController::class, 'checkout_data'])->name('checkout-data');
