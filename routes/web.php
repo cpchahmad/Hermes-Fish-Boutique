@@ -38,4 +38,4 @@ Route::group(['middleware'=>['verify.shopify']], function () {
 
 });
 
-    Route::get('checkout-data', [\App\Http\Controllers\AdminController::class, 'checkout_data'])->name('checkout-data');
+    Route::post('checkout-data', [\App\Http\Controllers\AdminController::class, 'checkout_data'])->name('checkout-data');
