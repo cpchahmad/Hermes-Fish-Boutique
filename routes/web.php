@@ -34,7 +34,15 @@ Route::group(['middleware'=>['verify.shopify']], function () {
     Route::get('check-order-view/{id}', [\App\Http\Controllers\AdminController::class, 'check_order_view'])->name('check.order.view');
 
     //draft order
+    Route::get('draft-orders', [\App\Http\Controllers\AdminController::class, 'draft_orders'])->name('draft.orders');
+
     Route::post('create-order', [\App\Http\Controllers\AdminController::class, 'create_order'])->name('create.order');
+
+    //shiping day
+    Route::get('shipping-day', [\App\Http\Controllers\AdminController::class, 'shipping_day'])->name('shipping_day');
+    Route::post('add-shipping-day', [\App\Http\Controllers\AdminController::class, 'add_shipping_day'])->name('shipping_day.add');
+    Route::post('update-shipping_day/{id}', [\App\Http\Controllers\AdminController::class, 'update_shipping_day'])->name('shipping_day.update');
+    Route::get('delete-shipping_day/{id}', [\App\Http\Controllers\AdminController::class, 'delete_shipping_day'])->name('shipping_day.delete');
 
 });
     Route::post('checkout-data', [\App\Http\Controllers\AdminController::class, 'checkout_data'])->name('checkout-data');

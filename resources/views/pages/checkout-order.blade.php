@@ -35,7 +35,7 @@
         <div class="row pt-2 ml-0 mr-0">
             <div class="col-md-12 card card-border-radius mb-2 pt-4 pb-1">
                 <div class="d-flex custom-top-div align-items-center">
-                    <div class="custom-left-arrow-div " ><a style="text-decoration: none; padding:19px; font-size: 30px; color: black;" href="{{route('checkout.orders')}}"><i class="fa fa-arrow-left" aria-hidden="true"></i></a></div>
+                    <div class="custom-left-arrow-div " ><a style="text-decoration: none; padding:19px; font-size: 30px; color: black;" href="@if ($order->create_status == 'yes') {{route('draft.orders')}} @else {{route('checkout.orders')}} @endif"><i class="fa fa-arrow-left" aria-hidden="true"></i></a></div>
                     <div><h4>#{{$order->id}}</h4></div>
                 </div>
                 <div class="ml-5 pl-3">

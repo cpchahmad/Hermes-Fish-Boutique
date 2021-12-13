@@ -30,15 +30,23 @@
          Fish Boutique</a>
     <ul class="nav">
         <li class="nav-item">
-            <a class="nav-link text-white" href="{{ route('home') }}">Orders</a>
+            <div class="main-div">
+                <div><a class="nav-link text-white" href="{{ route('checkout.orders') }}">New Orders</a></div>
+                <span class="order-for-checkout" aria-hidden="true">@if(isset($notification) && $notification > 0){{$notification}} @endif</span>
+            </div>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-white" href="{{ route('draft.orders') }}">Inprocess Orders</a>
         </li>
 
         <li class="nav-item">
-            <div class="main-div">
-            <div><a class="nav-link text-white" href="{{ route('checkout.orders') }}">Checkout Orders</a></div>
-            <span class="order-for-checkout" aria-hidden="true">@if(isset($notification) && $notification > 0){{$notification}} @endif</span>
-            </div>
+            <a class="nav-link text-white" href="{{ route('home') }}">Completed Orders</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link text-white" href="{{ route('shipping_day') }}">Shipping Days</a>
+        </li>
+
+
         {{--        <li class="nav-item">--}}
 {{--            <a class="nav-link text-white" href="{{ route('board.color.all') }}">Colors</a>--}}
 {{--        </li>--}}

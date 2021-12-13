@@ -10,6 +10,7 @@ use App\Models\Order;
 use App\Models\OrderLineItem;
 use App\Models\Product;
 use App\Models\ProductVarient;
+use App\Models\ShippingDay;
 use App\Models\Varient;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -206,7 +207,14 @@ class AdminController extends Controller
         }
     }
     public function checkout_orders(){
-        $orders = CheckoutOrder::latest()->paginate(20);
+        $orders = CheckoutOrder::where('status',0)->latest()->paginate(20);
+        $notification = CheckoutOrder::where('status',0)->count();
+        return view('pages.checkout-orders')->with([
+            'orders'=> $orders,
+            'notification'=>$notification,
+        ]);
+    }public function draft_orders(){
+        $orders = CheckoutOrder::where('status',1)->latest()->paginate(20);
         $notification = CheckoutOrder::where('status',0)->count();
         return view('pages.checkout-orders')->with([
             'orders'=> $orders,
@@ -410,4 +418,68 @@ class AdminController extends Controller
         }
     }
 
+
+    public function shipping_day(){
+        $shipping_days = ShippingDay::latest()->paginate(20);
+        $notification = CheckoutOrder::where('status',0)->count();
+        return view('pages.shipping_days')->with([
+            'shipping_days'=>$shipping_days,
+            'notification'=>$notification,
+        ]);
+    }
+    public function add_shipping_day(Request $request){
+        $shipping_day = new ShippingDay();
+        $shipping_day->day=$request->day;
+        $shipping_day->time=$request->time;
+        $shipping_day->save();
+
+//        $this->addUpdateShopMetafields();
+
+
+        return Redirect::tokenRedirect('shipping_day', ['notice' => 'Shipping Day Created Successfully']);
+    }
+    public function update_shipping_day($id,Request $request){
+        $shipping_day = ShippingDay::findorfail($id);
+        $shipping_day->day=$request->day;
+        $shipping_day->time=$request->time;
+        $shipping_day->save();
+        return Redirect::tokenRedirect('shipping_day', ['notice' => 'Shipping Day Updated Successfully']);
+    }
+    public function delete_shipping_day($id){
+        $shipping_day = ShippingDay::findorfail($id);
+        $shipping_day->delete();
+        return Redirect::tokenRedirect('shipping_day', ['notice' => 'Shipping Day Deleted Successfully']);
+    }
+
+    public function addUpdateShopMetafields(){
+        $shipping_days = ShippingDay::all();
+        $shipping_days=json_encode($shipping_days);
+        $shop=Auth::user();
+        $shop_metafield = $shop->api()->rest('post', '/admin/metafields.json', [
+            'metafields' => [
+                    "metafield" => [
+                        "namespace" => "shipping_days",
+                        "key" => "shipping_days",
+                        "value" => $shipping_days,
+                        "type" => "json_string"
+                    ]
+            ]
+        ]);
+            dd($shop_metafield);
+        if($shop_metafield['errors']==true) {
+
+            $metafields = $shop->api()->rest('get', '/admin/metafields.json');
+            $metafields = json_decode(json_encode($metafields['body']['container']['metafields']));
+            foreach ($metafields as $metafield){
+//            dd($metafield);
+                if($metafield->key=='shipping_days') {
+                    $customers = $shop->api()->rest('put', '/admin/metafields/' . $metafield->id . '.json', [
+                        "metafield" => [
+                            "value" => $shipping_days,
+                        ]
+                    ]);
+                }
+            }
+        }
+    }
 }
