@@ -292,19 +292,21 @@ class AdminController extends Controller
         $o->save();
 
 //        dd($check_items);
-        foreach ($check_items->items as $item) {
+        if($check_items !=null) {
+            foreach ($check_items->items as $item) {
 
-            $ol = new CheckOrderLine();
-            $ol->order_id = $o->id;
-            $ol->product_id = $item->product_id;
-            $ol->sku = $item->sku;
-            $ol->title = $item->title;
-            $ol->price = $item->price;
-            $ol->quantity = $item->quantity;
-            $ol->variant_id = $item->variant_id;
-            $ol->variant_title = $item->variant_title;
-            $ol->image = $item->image;
-            $ol->save();
+                $ol = new CheckOrderLine();
+                $ol->order_id = $o->id;
+                $ol->product_id = $item->product_id;
+                $ol->sku = $item->sku;
+                $ol->title = $item->title;
+                $ol->price = $item->price;
+                $ol->quantity = $item->quantity;
+                $ol->variant_id = $item->variant_id;
+                $ol->variant_title = $item->variant_title;
+                $ol->image = $item->image;
+                $ol->save();
+            }
         }
         return redirect('https://hermes-fish-boutique.myshopify.com/pages/thanks-for-order');
     }
