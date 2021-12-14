@@ -235,7 +235,7 @@ class AdminController extends Controller
         $check_items = json_decode($request->checkout_items);
         $o = new CheckoutOrder();
 //        $o->note = $check_items->note;
-        dd($check_items,$check_items->currency);
+//        dd($check_items,$check_items->currency);
         if($check_items !=null){
 
 
