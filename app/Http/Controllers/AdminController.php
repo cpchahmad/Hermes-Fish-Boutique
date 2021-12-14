@@ -234,11 +234,15 @@ class AdminController extends Controller
         $check_items = json_decode(json_decode($request->checkout_items));
         $o = new CheckoutOrder();
 //        $o->note = $check_items->note;
-        dd($check_items);
+//        dd($check_items);
+        if($check_items !=null){
+
+
         $o->currency = $check_items->currency;
         $o->total_price = $check_items->total_price;
         $o->total_discount = $check_items->total_discount;
         $o->total_weight = $check_items->total_weight;
+        }
 
         if ($request->news == 'on'){
             $o->news = $request->news;
@@ -250,7 +254,11 @@ class AdminController extends Controller
              $o->note = "Shipping Day: ".$request->shipping_day." Shipping Time: ".$request->shipping_time;
 
         }else{
-            $o->note = $check_items->note;
+            if($check_items !=null) {
+                $o->note = $check_items->note;
+            }else{
+                $o->note ="";
+            }
 
         }
 
