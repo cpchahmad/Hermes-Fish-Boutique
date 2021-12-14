@@ -41,6 +41,7 @@ Route::group(['middleware'=>['verify.shopify']], function () {
     //shiping day
     Route::get('shipping-day', [\App\Http\Controllers\AdminController::class, 'shipping_day'])->name('shipping_day');
     Route::post('add-shipping-day', [\App\Http\Controllers\AdminController::class, 'add_shipping_day'])->name('shipping_day.add');
+    Route::get('edit-shipping_day/{id}', [\App\Http\Controllers\AdminController::class, 'edit_shipping_day'])->name('shipping_day.edit');
     Route::post('update-shipping_day/{id}', [\App\Http\Controllers\AdminController::class, 'update_shipping_day'])->name('shipping_day.update');
     Route::get('delete-shipping_day/{id}', [\App\Http\Controllers\AdminController::class, 'delete_shipping_day'])->name('shipping_day.delete');
 

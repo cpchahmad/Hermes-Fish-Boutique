@@ -233,7 +233,7 @@ class AdminController extends Controller
 
         $check_items = json_decode(json_decode($request->checkout_items));
         $o = new CheckoutOrder();
-        $o->note = $check_items->note;
+//        $o->note = $check_items->note;
         $o->currency = $check_items->currency;
         $o->total_price = $check_items->total_price;
         $o->total_discount = $check_items->total_discount;
@@ -244,6 +244,15 @@ class AdminController extends Controller
         }else{
             $o->news = 'off';
         }
+        if ($request->shipping_day != null && $request->shipping_time != null){
+
+             $o->note = "Shipping Day: ".$request->shipping_day." Shipping Time: ".$request->shipping_time;
+
+        }else{
+            $o->note = $check_items->note;
+
+        }
+
         $o->emailorphone = $request->emailorphone;
         $o->country = $request->country;
         $o->first_name = $request->first_name;
@@ -252,7 +261,8 @@ class AdminController extends Controller
         $o->apartment = $request->apartment;
         if ($request->city1 != null){
             $o->city = $request->city1;
-        }elseif ($request->city2 != null){
+        }
+        elseif ($request->city2 != null){
             $o->city = $request->city2;
         }else{
             $o->city = '';
@@ -428,54 +438,125 @@ class AdminController extends Controller
         ]);
     }
     public function add_shipping_day(Request $request){
+
+//        dd($request->all());
+        $check_day=ShippingDay::where('day',$request->day)->first();
+        if($check_day !=null){
+            return Redirect::tokenRedirect('shipping_day', ['notice' => 'Day already exist!']);
+        }
+        $time_data=$request->time_data;
+        if($time_data==null){
+
+            return Redirect::tokenRedirect('shipping_day', ['notice' => 'Please add discount!']);
+        }
+        $time_array=array();
+        foreach ($time_data as $data){
+           array_push($time_array,$data['time']) ;
+        }
+//        dd($time_array);
+
+        $time_array=json_encode($time_array);
         $shipping_day = new ShippingDay();
         $shipping_day->day=$request->day;
-        $shipping_day->time=$request->time;
+        $shipping_day->time=$time_array;
         $shipping_day->save();
 
-//        $this->addUpdateShopMetafields();
+        $this->addUpdateShopMetafields();
 
 
         return Redirect::tokenRedirect('shipping_day', ['notice' => 'Shipping Day Created Successfully']);
     }
+    public function edit_shipping_day($id){
+        $shipping = ShippingDay::findorfail($id);
+        $notification = CheckoutOrder::where('status',0)->count();
+        return view('pages.edit_shipping_days')->with([
+            'shipping'=>$shipping,
+            'notification'=>$notification,
+        ]);
+    }
     public function update_shipping_day($id,Request $request){
+        $check_day=ShippingDay::where('day',$request->day)->where('id','!=',$id)->first();
+        if($check_day !=null){
+            return Redirect::tokenRedirect('shipping_day', ['notice' => 'Day already exist!']);
+        }
+        $time_data=$request->time_data;
+
+        $time_array=array();
+        if($request->input('time') !=null){
+            $count=count($request->input('time'));
+
+            for($i=0;$i<$count;$i++){
+                array_push($time_array,$request->input('time')[$i]) ;
+            }
+        }
+        if($time_data !=null) {
+
+            foreach ($time_data as $data){
+                array_push($time_array,$data['time']) ;
+            }
+        }
+
+        $time_array=json_encode($time_array);
+//dd($time_array);
         $shipping_day = ShippingDay::findorfail($id);
         $shipping_day->day=$request->day;
-        $shipping_day->time=$request->time;
+        $shipping_day->time=$time_array;
         $shipping_day->save();
+
+        $this->addUpdateShopMetafields();
+
         return Redirect::tokenRedirect('shipping_day', ['notice' => 'Shipping Day Updated Successfully']);
     }
     public function delete_shipping_day($id){
         $shipping_day = ShippingDay::findorfail($id);
         $shipping_day->delete();
+        $this->addUpdateShopMetafields();
+
         return Redirect::tokenRedirect('shipping_day', ['notice' => 'Shipping Day Deleted Successfully']);
     }
 
     public function addUpdateShopMetafields(){
         $shipping_days = ShippingDay::all();
-        $shipping_days=json_encode($shipping_days);
+//        $shipping_days=json_encode($shipping_days);
+        $f_data=array();
+
+        foreach ($shipping_days as $shipping_day){
+            $data=array();
+            $data['day']=$shipping_day->day;
+            $data['time']=json_decode($shipping_day->time);
+            array_push($f_data,$data);
+        }
+        $f_data=json_encode($f_data);
+
+//        dd($shipping_days);
         $shop=Auth::user();
         $shop_metafield = $shop->api()->rest('post', '/admin/metafields.json', [
-            'metafields' => [
-                    "metafield" => [
-                        "namespace" => "shipping_days",
-                        "key" => "shipping_days",
-                        "value" => $shipping_days,
-                        "type" => "json_string"
-                    ]
-            ]
+          "metafield" =>array(
+              "key" => 'shipping_days',
+              "value" => $f_data,
+              "value_type" => "json_string",
+              "namespace" => "shop",
+          )
+
+              /*[
+              "namespace" => "shop",
+              "key" => "test",
+              "value" => "213232",
+              "type" => "string"
+              ]*/
         ]);
-            dd($shop_metafield);
+//            dd($shop_metafield);
         if($shop_metafield['errors']==true) {
 
             $metafields = $shop->api()->rest('get', '/admin/metafields.json');
             $metafields = json_decode(json_encode($metafields['body']['container']['metafields']));
+//            dd($metafields);
             foreach ($metafields as $metafield){
 //            dd($metafield);
                 if($metafield->key=='shipping_days') {
                     $customers = $shop->api()->rest('put', '/admin/metafields/' . $metafield->id . '.json', [
                         "metafield" => [
-                            "value" => $shipping_days,
+                            "value" => $f_data,
                         ]
                     ]);
                 }
