@@ -231,10 +231,10 @@ class AdminController extends Controller
     }
     public function checkout_data(Request $request){
 
-        $check_items = json_decode(json_encode($request->checkout_items),false);
+        $check_items = json_decode(json_encode($request->checkout_items));
         $o = new CheckoutOrder();
 //        $o->note = $check_items->note;
-        dd($check_items['currency']);
+        dd($check_items);
         if($check_items !=null){
 
 
